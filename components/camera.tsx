@@ -1,13 +1,15 @@
+import { Skia } from "@shopify/react-native-skia";
 import { StyleSheet } from "react-native";
 import {
   Camera,
   CameraDevice,
-  useFrameProcessor,
+  useSkiaFrameProcessor,
 } from "react-native-vision-camera";
 
 export default function MyCamera({ device }: { device: CameraDevice }) {
-  const frameProcessor = useFrameProcessor((frame) => {
+  const frameProcessor = useSkiaFrameProcessor((frame) => {
     "worklet";
+    frame.render();
   }, []);
   return (
     <Camera
