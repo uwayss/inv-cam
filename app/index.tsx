@@ -1,18 +1,25 @@
-import { useRouter } from "expo-router";
-import { Button, Text, View } from "react-native";
-
-export default function Index() {
-  const router = useRouter();
+import { useEffect } from "react";
+import { Text, View } from "react-native";
+import {
+  useCameraDevice,
+  useCameraPermission,
+} from "react-native-vision-camera";
+import MyCamera from "@/components/camera";
+function Message({ text }: { text: string }) {
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Text>Hi. 👋👋😉</Text>
-      <Button title="Go to Camera" onPress={() => router.push("/camera")} />
+    <View>
+      <Text>{text}</Text>
     </View>
   );
+}
+export default function CameraView() {
+  const device = useCameraDevice("front");
+  const { hasPermission, requestPermission } = useCameraPermission();
+
+  useEffect(() => {
+    if (!hasPermission) requestPermission();
+  }, [hasPermission, requestPermission]);
+  if (!hasPermission) return <Message text="I need ur permission" />;
+  if (device == null) return <Message text="Camera not Available" />;
+  return <MyCamera device={device} />;
 }
